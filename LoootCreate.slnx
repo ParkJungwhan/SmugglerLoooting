@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="LoootCreate/LoootCreate.csproj">
+    <Platform Solution="Debug|*" Project="x64" />
+  </Project>
+  <Project Path="TestConsole/TestConsole.csproj" Id="e6c0c4f3-a643-470f-96d0-0d1094d57610" />
+</Solution>
