@@ -5,17 +5,20 @@
 /// </summary>
 public class Lottery2026Info
 {
-    public int resultCode { get; set; }
+    public int? resultCode { get; set; }
     public string resultMessage { get; set; }
     public Data data { get; set; }
+
+    public bool IsSuccess
+    { get { return (resultCode == null && string.IsNullOrEmpty(resultMessage)); } }
 }
 
 public class Data
 {
-    public List<LotteryInfo> list { get; set; }
+    public List<Lottery2026Data> list { get; set; }
 }
 
-public class LotteryInfo
+public class Lottery2026Data
 {
     public int winType0 { get; set; }
     public int winType1 { get; set; }   // 1등 자동 당첨자수
@@ -32,7 +35,7 @@ public class LotteryInfo
     public int bnsWnNo { get; set; }        // 보너스 번호
     public string ltRflYmd { get; set; }    //추첨일 string format "YYYYMMDD"
     public int rnk1WnNope { get; set; }     // 1등 당첨게임 수
-    public int rnk1WnAmt { get; set; }      // 1게임당 당첨금
+    public long rnk1WnAmt { get; set; }      // 1게임당 당첨금
     public long rnk1SumWnAmt { get; set; }  // 등위별 총 당첨금(1등)
     public int rnk2WnNope { get; set; }     // 2등
     public int rnk2WnAmt { get; set; }
@@ -50,4 +53,35 @@ public class LotteryInfo
     public long rlvtEpsdSumNtslAmt { get; set; }
     public long wholEpsdSumNtslAmt { get; set; }        // 총 판매금액
     public string excelRnk { get; set; }    //비고란 출력
+}
+
+public class LotteryNumber
+{
+    public byte lotteryid { get; set; }
+    public byte Num1 { get; set; }
+    public byte Num2 { get; set; }
+    public byte Num3 { get; set; }
+    public byte Num4 { get; set; }
+    public byte Num5 { get; set; }
+    public byte Num6 { get; set; }
+    public byte bonusnum { get; set; }
+}
+
+public class LastWeekInfo
+{
+    public int ltEpsd { get; set; }
+
+    public string DateValue { get; set; }
+
+    public DateOnly LastLotteryDate
+    {
+        get
+        {
+            if (DateTime.TryParseExact(DateValue, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+            {
+                return DateOnly.FromDateTime(parsedDate);
+            }
+            return DateOnly.MinValue;
+        }
+    }
 }

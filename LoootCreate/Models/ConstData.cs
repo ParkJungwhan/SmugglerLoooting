@@ -16,4 +16,10 @@ public static class LOTTERYCONSTANTS
     /// </summary>
     public static string KR2026_LOTTERY_RANGE_URL =
         "https://www.dhlottery.co.kr/lt645/selectPstLt645Info.do?srchStrLtEpsd={0}&srchEndLtEpsd={1}"; //0 : start, 1: End
+
+    /// <summary>
+    /// 저번주(최신) 당첨정보
+    /// </summary>
+    public static string KR2026_LOTTERY_LASTEST_URL =
+        "https://www.dhlottery.co.kr/lt645/selectPstLt645Info.do";
 }

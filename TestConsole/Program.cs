@@ -12,7 +12,7 @@ namespace TestConsole
         {
             AppSetting.LoadConfig();
 
-            using var conn = new NpgsqlConnection(DBInfo.ConnectionString);
+            using var conn = new NpgsqlConnection(AppConfig.ConnectionString);
             conn.Open();
 
             string sql = "select drwno, drwtno1,drwtno2,drwtno3,drwtno4,drwtno5,drwtno6 from lottery;";

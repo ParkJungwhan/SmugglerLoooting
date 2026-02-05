@@ -1,8 +1,4 @@
-﻿using LoootCreate.Models;
-using LoootCreate.Services;
-using LoootCreate.Services.DB;
-
-namespace LoootCreate;
+﻿namespace LoootCreate;
 
 internal class Program
 {
@@ -11,22 +7,21 @@ internal class Program
         // Console.WriteLine("Hello, World!");
         // monitoring 서버에 재시작 알림 필요
 
-        bool bConfig = AppSetting.LoadConfig();
-        if (!bConfig)
+        ServerApp app = new ServerApp();
+
+        if (false == app.InitApp())
         {
-            Console.WriteLine("Config Load Fail. Exit");
+            Console.WriteLine("ServerApp Init Fail. Exit");
             Console.ReadLine();
             return;
         }
 
-        DBConnection dbConnection = new DBConnection();
-        dbConnection.SetConnection(DBInfo.ConnectionString);
-        // DB Init
-
-        string key = AppSetting.DBInit(dbConnection);
-
-        TeleBot bot = new TeleBot(dbConnection, key);
-        bot.StartBot();
+        if (false == app.StartApp())
+        {
+            Console.WriteLine("ServerApp Start Fail. Exit");
+            Console.ReadLine();
+            return;
+        }
 
         Console.WriteLine($"{DateTime.Now}\tPress Enter to exit");
         Console.ReadLine();

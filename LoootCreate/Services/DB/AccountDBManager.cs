@@ -1,14 +1,13 @@
-﻿using System.Data;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Dapper;
 
 namespace LoootCreate.Services.DB;
 
-internal class AccountDBManager
+public class AccountDBManager
 {
-    private readonly IDbConnection conn;
+    private readonly DBConnection conn;
 
-    public AccountDBManager(IDbConnection connManager)
+    public AccountDBManager(DBConnection connManager)
     {
         conn = connManager;
     }
@@ -18,9 +17,9 @@ internal class AccountDBManager
         string result = null;
         try
         {
-            conn.Open();
+            conn.Conn.Open();
 
-            result = conn.QuerySingleOrDefault<string>(
+            result = conn.Conn.QuerySingleOrDefault<string>(
                "SELECT fn_get_keyvalue(@p_keyname, @p_keydiv)",
                new { p_keyname = keyname, p_keydiv = keydiv });
         }
@@ -30,7 +29,7 @@ internal class AccountDBManager
         }
         finally
         {
-            conn.Close();
+            conn.Conn.Close();
         }
 
         return result;

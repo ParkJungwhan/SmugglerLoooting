@@ -51,7 +51,7 @@ public class LottoMaker
     {
         try
         {
-            using var db = new NpgsqlConnection(DBInfo.ConnectionString);
+            using var db = new NpgsqlConnection(AppConfig.ConnectionString);
 
             db.Open();
 

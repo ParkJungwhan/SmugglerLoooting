@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
-using LoootCreate.Services.DB;
+using LoootCreate.Models;
+using LoootCreate.Services.Lottery;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -9,19 +10,21 @@ namespace LoootCreate;
 internal class TeleBot
 {
     private TelegramBotClient botClient;
+    private LottoManager LootManager;
 
-    private LotteryDBManager LotteryDB = null;
-
-    public TeleBot(DBConnection dbmgr, string botkey)
+    //public TeleBot(DBConnection dbmgr, string botkey)
+    public TeleBot(LottoManager lootmanager)
     {
-        Debug.Assert(!string.IsNullOrEmpty(botkey));
-        Debug.Assert(dbmgr != null);
+        Debug.Assert(lootmanager != null);
+        LootManager = lootmanager;
 
         try
         {
-            LotteryDB = new LotteryDBManager(dbmgr);
+            //LotteryDB = new LotteryDBManager(dbmgr);
 
-            botClient = new TelegramBotClient(botkey);
+            Debug.Assert(false == string.IsNullOrEmpty(AppConfig.TelegramBotToken));
+
+            botClient = new TelegramBotClient(AppConfig.TelegramBotToken);
         }
         catch (Exception ex)
         {

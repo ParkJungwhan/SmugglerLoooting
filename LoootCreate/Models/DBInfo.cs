@@ -1,6 +1,8 @@
 ﻿namespace LoootCreate.Models;
 
-public class DBInfo
+public class AppConfig
 {
     public static string ConnectionString { get; set; }
+
+    public static string TelegramBotToken { get; set; }
 }
