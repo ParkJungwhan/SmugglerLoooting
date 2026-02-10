@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using LoootCreate.Models;
-using LoootCreate.Services.Lottery;
+using LoootCreate.Services;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -10,17 +10,16 @@ namespace LoootCreate;
 internal class TeleBot
 {
     private TelegramBotClient botClient;
-    private LottoManager LootManager;
+    private LottoMaker maker;
 
-    //public TeleBot(DBConnection dbmgr, string botkey)
-    public TeleBot(LottoManager lootmanager)
+    public TeleBot(LottoMaker lootmanager)
     {
         Debug.Assert(lootmanager != null);
-        LootManager = lootmanager;
+        maker = lootmanager;
 
         try
         {
-            //LotteryDB = new LotteryDBManager(dbmgr);
+            maker.Init();
 
             Debug.Assert(false == string.IsNullOrEmpty(AppConfig.TelegramBotToken));
 
@@ -35,18 +34,16 @@ internal class TeleBot
 
     public async void StartBot()
     {
-        //Lotto = new LottoMaker();
-
         try
         {
-            // await botClient.DeleteWebhook(true);
+            //await botClient.DeleteWebhook(true);
             //var info = await botClient.GetWebhookInfo();
             //if (info is not null)
             //{
             //    Console.WriteLine($"Webhook URL: {info.Url}");
             //}
 
-            if (botClient != null) return;
+            if (botClient == null) throw new InvalidOperationException("Bot client is not initialized.");
 
             var me = await botClient.GetMe();
             Console.WriteLine($"{DateTime.Now} Start listening for @{me.Username}");
@@ -59,7 +56,6 @@ internal class TeleBot
             return;
         }
 
-        //Console.Title = me.Username;
         Console.ReadLine();
     }
 
@@ -71,33 +67,28 @@ internal class TeleBot
 
             if (message.Text == "/lotto")
             {
-                // make new lotto number
-                //await botClient.SendTextMessageAsync(message.Chat, "새로운 로또 번호를 추출합니다(시간이 걸릴수 있습니다).");
-                await botClient.SendMessage(message.Chat, "새로운 로또 번호를 추출합니다(시간이 걸릴수 있습니다).");
-
-                await Task.Delay(1000);
-                await botClient.SendMessage(message.Chat, "Test : Bot Test 입니다");
+                await botClient.SendMessage(message.Chat, $"{DateTime.Now} 로또 번호생성중...");
 
                 // 여기서 로또 생성 로직 호출
-                //for (int i = 0; i < 5; i++)
-                //{
-                //    var result = Lotto.Make();
-                //    result.Sort();
+                for (int i = 0; i < 5; i++)
+                {
+                    // make new lotto number
+                    var result = maker.MakeNumber();
+                    await Task.Delay(100);
 
-                //    string strMsg = string.Empty;
-                //    foreach (var seq in result)
-                //        strMsg += $",{seq}";
+                    string strMsg = string.Empty;
+                    foreach (var seq in result)
+                        strMsg += $", {seq}";
 
-                //    //await botClient.SendTextMessageAsync(message.Chat, strMsg.Substring(1));
-                //    await botClient.SendMessage(message.Chat, strMsg.Substring(1));
-                //}
+                    await botClient.SendMessage(message.Chat, $"{i + 1}: {strMsg.Substring(1)}");
+                }
             }
             else
             {
                 await botClient.SendMessage(message.Chat, "존재하지 않는 메뉴입니다.");
             }
 
-            await botClient.SendMessage(message.Chat, "전송완료");
+            await botClient.SendMessage(message.Chat, $"{DateTime.Now} 번호 전송완료");
         }
     }
 
@@ -106,7 +97,7 @@ internal class TeleBot
         if (exception is ApiRequestException apiRequestException)
         {
             //await botClient.SendTextMessageAsync(123, apiRequestException.ToString());
-            //await botClient.SendMessage(123, apiRequestException.ToString());
+            await botClient.SendMessage(123, apiRequestException.ToString());
         }
     }
 }

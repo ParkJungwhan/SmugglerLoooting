@@ -57,7 +57,7 @@ public class Lottery2026Data
 
 public class LotteryNumber
 {
-    public byte lotteryid { get; set; }
+    public int lotteryid { get; set; }
     public byte Num1 { get; set; }
     public byte Num2 { get; set; }
     public byte Num3 { get; set; }

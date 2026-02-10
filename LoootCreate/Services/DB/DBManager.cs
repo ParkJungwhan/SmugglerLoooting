@@ -56,7 +56,7 @@ public class DBManager
             return false;
         }
 
-        if (AccountDB != null) return false;
+        if (AccountDB == null) return false;
 
         var keyvalue = AccountDB.GetTableKey("telegrambot", "lottery");
         if (true == string.IsNullOrEmpty(keyvalue)) Console.WriteLine("[DB] No result value!!!");

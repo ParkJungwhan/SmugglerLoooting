@@ -1,5 +1,4 @@
 ﻿using LoootCreate.Models;
-using LoootCreate.Services.DB;
 using Newtonsoft.Json;
 
 namespace LoootCreate.Services.Network;
@@ -7,10 +6,6 @@ namespace LoootCreate.Services.Network;
 public class LottoWebManager
 {
     private WebHttp web = new WebHttp();
-
-    public LottoWebManager()
-    {
-    }
 
     public Lottery2026Info GetLottoData(int idx)
     {

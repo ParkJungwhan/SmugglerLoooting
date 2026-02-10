@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using LoootCreate.Models;
+﻿using LoootCreate.Models;
 using LoootCreate.Services.DB;
 using LoootCreate.Services.Network;
 
@@ -7,7 +6,7 @@ namespace LoootCreate.Services.Lottery;
 
 public class LottoManager
 {
-    private HashSet<string> hash = null;
+    public HashSet<string> hash { get; private set; }
 
     private int lastestDrawNo = 0;
 
@@ -39,6 +38,7 @@ public class LottoManager
         {
             // 데이터를 정상적으로 받아옴(이걸 기준으로 그동안의 데이터 가져오기)
             int lastweekIdx = lastweeklottodata.data.list[0].ltEpsd;
+            Console.WriteLine($"최신 로또 데이터 회차: {lastweekIdx}");
 
             if (false == DateTime.TryParseExact(lastweeklottodata.data.list[0].ltRflYmd, "yyyyMMdd",
                 null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
@@ -52,9 +52,10 @@ public class LottoManager
             if (lastestDrawNo == 0) lastestDrawNo++;
 
             // 차이만큼 데이터 가져오기
-            if (lastweekIdx >= lastestDrawNo)
+            if (lastweekIdx > lastestDrawNo)
             {
                 var addlottoInfo = webManager.GetLottoRangeData(lastestDrawNo, lastweekIdx);
+                Console.WriteLine($"로또 데이터 조회: {lastestDrawNo} ~ {lastweekIdx}");
 
                 if (addlottoInfo.IsSuccess)
                 {
@@ -67,7 +68,7 @@ public class LottoManager
                     {
                         lstLotto.Add(new LotteryNumber()
                         {
-                            lotteryid = (byte)item.ltEpsd,
+                            lotteryid = item.ltEpsd,
                             Num1 = (byte)item.tm1WnNo,
                             Num2 = (byte)item.tm2WnNo,
                             Num3 = (byte)item.tm3WnNo,
@@ -79,7 +80,12 @@ public class LottoManager
                     }
 
                     // DB에 넣기
+
                     DBManager.Instance.LotteryDB.InsertLotteryNumbers(lstLotto);
+                    Console.WriteLine($"로또 데이터 추가 완료: {lstLotto.Count()}개");
+
+                    DBManager.Instance.LotteryDB.InsertLotteryAllInfoNumbers(addlottoInfo.data.list);
+                    Console.WriteLine($"로또 데이터 추가 완료: {addlottoInfo.data.list.Count()}개");
 
                     foreach (var item in lstLotto)
                     {

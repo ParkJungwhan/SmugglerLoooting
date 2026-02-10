@@ -7,7 +7,7 @@ namespace LoootCreate;
 
 public class ServerApp
 {
-    private LottoManager LootManager;
+    private LottoMaker maker;
 
     public bool InitApp()
     {
@@ -25,15 +25,14 @@ public class ServerApp
         // 로또 History 가져오기
         // 1. DB에서 먼저 가져오기
         // 2. api에서 가져오기
-        LootManager = new LottoManager();
-        LootManager.AllHistoryLoad();
+        maker = new LottoMaker();
 
         return true;
     }
 
     public bool StartApp()
     {
-        TeleBot bot = new TeleBot(LootManager);
+        TeleBot bot = new TeleBot(maker);
         bot.StartBot();
         return true;
     }

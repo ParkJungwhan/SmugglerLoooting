@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using System.Diagnostics;
-using Dapper;
 using Npgsql;
 
 namespace LoootCreate.Services.DB;
