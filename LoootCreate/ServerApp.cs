@@ -1,7 +1,5 @@
 ﻿using LoootCreate.Services;
 using LoootCreate.Services.DB;
-using LoootCreate.Services.Lottery;
-using LoootCreate.Services.Network;
 
 namespace LoootCreate;
 

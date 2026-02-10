@@ -16,18 +16,16 @@ public class LottoManager
     public LottoManager()
     {
         webManager = new LottoWebManager();
+
+        Timer timer = new Timer((e) =>
+        {
+            UpdateLastestWeekDateLottery();
+        }, null, TimeSpan.Zero, TimeSpan.FromDays(1));
+        //}, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
     }
 
     public void AllHistoryLoad()
     {
-        var nowDate = DateOnly.FromDateTime(DateTime.Now);
-        if (lastestWeekDate == null)
-        {
-        }
-        else if (lastestWeekDate > nowDate)
-        {
-        }
-
         // DB에서 모든 로또 히스토리 가져오기
         hash = DBManager.Instance.LotteryDB.AllHistory();
         lastestDrawNo = DBManager.Instance.LotteryDB.LastestDrawNo;
@@ -94,6 +92,21 @@ public class LottoManager
                     }
                 }
             }
+        }
+    }
+
+    private void UpdateLastestWeekDateLottery()
+    {
+        // 현재의 시간이 마지막 로또 날짜보다 일주일 뒤 이후인지 확인
+        var nowDate = DateOnly.FromDateTime(DateTime.Now);
+
+        if (lastestWeekDate == DateOnly.MinValue) return;
+
+        var nextweek = lastestWeekDate.AddDays(7);
+        if (nextweek < nowDate) // 일주일 뒤다
+        {
+            Console.WriteLine($"{DateTime.Now}\t최신 로또 갱신");
+            AllHistoryLoad();
         }
     }
 }
